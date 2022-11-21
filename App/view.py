@@ -31,6 +31,7 @@ import threading
 from App import controller
 from DISClib.ADT import stack
 assert config
+from DISClib.ADT import list as lt
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -95,7 +96,8 @@ def optionFour(cont, initialStation):
 
 def optionFive(cont, initialStation, searchMethod):
     # TODO Lab 11, conectar con la funcion del controller searchPaths
-    pass
+    dictorigen  = controller.searchPaths(cont, initialStation, searchMethod)
+    print(dictorigen)
 
 
 def optionSix(cont, destStation):
@@ -123,17 +125,18 @@ def optionEight(cont):
           + str(maxdeg))
 
 
-def optionNine(cont, destStation, searchMethod):
+def optionNine(cont, initialStation, destStation, searchMethod):
     # TODO Lab 11, conectar con la funcion del controller hasSearchPath
-    haspath = None
+    haspath = controller.hasSearchPath(cont, initialStation, destStation, searchMethod)
     print(haspath)
 
 
-def optionTen(cont, destStation, searchMethod):
+def optionTen(cont, initialStation, destStation, searchMethod):
     # TODO Lab 11, conectar con la funcion del controller searchPath
-    path = None
+    path = controller.searchPathTo(cont, initialStation, destStation, searchMethod)
     if path is not None:
-        pass
+        for estacion in lt.iterator(path):
+            print(estacion)
     else:
         print('No hay camino')
 
@@ -153,6 +156,12 @@ def thread_cycle():
             # cont es el controlador que se usará de acá en adelante
             cont = controller.init()
 
+            searchMetod = int(input("Ingrese si quiere utilizar bfs o dfs\n1.bfs \n2.dfs\n"))
+            if searchMetod == 1:
+                searchMetod = "bfs"
+            elif searchMetod == 2:
+                searchMetod = "dfs"
+
         elif int(inputs) == 2:
             optionTwo(cont)
 
@@ -166,7 +175,9 @@ def thread_cycle():
 
         elif int(inputs) == 5:
             # TODO Lab 11, completar inputs opt 5, searchMethod, initialStation
-            pass
+
+            initialStation = input("Ingrese la estación inicial para la búsqueda")
+            optionFive(cont, initialStation, searchMetod)
 
         elif int(inputs) == 6:
             destStation = input("Estación destino (Ej: 15151-10): ")
@@ -181,12 +192,15 @@ def thread_cycle():
 
         elif int(inputs) == 9:
             # TODO Lab 11, completar inputs opt 9, destStation
-            pass
+            initialStation = input("Ingrese la estación inicial para la búsqueda")
+            destStation = input("Ingrese la estación de destino que quiere calcular")
+            optionNine(cont, initialStation, destStation, searchMetod)
 
         elif int(inputs) == 10:
             # TODO Lab 11, completar inputs opt 10, destStation
-            pass
-
+            initialStation = input("Ingrese la estación inicial para la búsqueda")
+            destStation = input("Ingrese la estación de destino que quiere calcular")
+            optionTen(cont, initialStation, destStation, searchMetod)
         else:
             sys.exit(0)
     sys.exit(0)

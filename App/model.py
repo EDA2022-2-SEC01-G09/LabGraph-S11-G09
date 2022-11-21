@@ -30,6 +30,8 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 # TODO Lab 11, agregar importaciones dfs y bfs
+from DISClib.Algorithms.Graphs import dfs
+from DISClib.Algorithms.Graphs import bfs
 from DISClib.Utils import error as error
 assert config
 
@@ -59,6 +61,7 @@ def newAnalyzer():
             'connections': None,
             'components': None,
             'paths': None,
+            'search': None
         }
 
         analyzer['stops'] = m.newMap(numelements=14000,
@@ -217,14 +220,14 @@ def searchPaths(analyzer, initialStation, method):
     """
     # TODO Lab 11, ejectutar DepthFirstSearch de dfs
     if method == "dfs":
-        pass
+        dictorigen = dfs.DepthFirstSearch(analyzer['connections'],initialStation)
     # TODO Lab 11, ejectutar BreadhtFisrtSearch de bfs
     elif method == "bfs":
-        pass
-    return analyzer
+        dictorigen = bfs.BreadhtFisrtSearch(analyzer['connections'], initialStation)
+    return dictorigen 
 
 
-def hasSearchPath(analyzer, destStation, method):
+def hasSearchPath(analyzer, initialStation, destStation, method):
     """
     hasSearchPath indica si existe un camino desde la estacion inicial a
     la estación destino. Se debe ejecutar primero la funcion searchPaths()
@@ -236,13 +239,17 @@ def hasSearchPath(analyzer, destStation, method):
     """
     # TODO Lab 11, ejectutar hasPathTo por dfs
     if method == "dfs":
-        return None
+        dictorigen = searchPaths(analyzer,initialStation,method)
+        haspath = dfs.hasPathTo(dictorigen,destStation)
+        return haspath
     # TODO Lab 11, ejectutar hasPathTo por bfs
     elif method == "bfs":
-        return None
+        dictorigen = searchPaths(analyzer, destStation, method)
+        haspath = bfs.hasPathTo(dictorigen,destStation)
+        return haspath
 
 
-def searchPathTo(analyzer, destStation, method):
+def searchPathTo(analyzer, initialStation, destStation, method):
     """
     searchPath retorna el camino de encontrado entre la estacion de inicio
     y la estacion destino Se debe ejecutar primero la funcion searchPaths
@@ -258,10 +265,12 @@ def searchPathTo(analyzer, destStation, method):
     path = None
     # TODO Lab 11, ejectutar pathTo por dfs
     if method == "dfs":
-        pass
+        caminosorigen = searchPaths(analyzer,initialStation, method)
+        path = dfs.pathTo(caminosorigen,destStation)
     # TODO Lab 11, ejectutar pathTo por bfs
     elif method == "bfs":
-        pass
+        caminosorigen = searchPaths(analyzer,initialStation, method)
+        path = bfs.pathTo(caminosorigen,destStation)
     return path
 
 
